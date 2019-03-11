@@ -18,10 +18,14 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, help_text = 'Select a genre for this book')
 
     def __str__(self):
-        return slef.title
+        return self.name
 
     def get_absolute_url(self):
         return reverse('book-detail', args=[str(self.id)])
+
+    def display_genre(self):
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+    display_genre.short_description = 'Genre'
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4, help_text = 'Unique ID for the book')
@@ -49,7 +53,9 @@ class BookInstance(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.id} ({self.book.title})'
+        return f'{self.id} ({self.book.name})'
+
+
 
 
 class Author(models.Model):
